@@ -26,21 +26,52 @@ namespace plantillasDominio
         public Administrador()
         {
             PrecargaEquipos();
+            PrecargaJugadores();
         }
         public List<Equipo> Equipos
         {
             get { return this.equipos; }
         }
+        public List<Jugador> Jugadores
+        {
+            get { return this.jugadores; }
+        }
         private void AltaEquipo(string nombre)
         {
-            Equipo miEquipo = new Equipo(nombre);
+                if (nombre != "")
+                {
+                    Equipo miEquipo = new Equipo(nombre);
+                    equipos.Add(miEquipo);
+                }
+              
+            }
 
-            equipos.Add(miEquipo);
+
+        private void AltaJugador(string nombre, string rol,string equipo)
+        {
+            Equipo miEquipo = BuscarEquipo(equipo);
+            if (nombre != "" && rol != "" && miEquipo != null)
+            {
+                Jugador miJugador = new Jugador(nombre, rol, miEquipo);
+                jugadores.Add(miJugador);
+                miEquipo.Miembros.Add(miJugador);
+            }
         }
 
-        private void AltaJugador()
+        public Equipo BuscarEquipo (string nombre)
         {
-            Jugador miJugador = new Jugador();
+            Equipo miEquipo = null;
+            int i = 0;
+            while (i < equipos.Count && miEquipo == null)
+            {
+                if(nombre == equipos[i].Nombre)
+                {
+                    miEquipo = equipos[i];
+                }
+                i++;
+            }
+            return miEquipo;
+
         }
 
         private void PrecargaEquipos()
@@ -49,6 +80,21 @@ namespace plantillasDominio
             this.AltaEquipo("Nacional");
             this.AltaEquipo("Liverpool");
             this.AltaEquipo("Cerrito");
+
+        }
+        private void PrecargaJugadores()
+        {
+            this.AltaJugador("Franco Fagundez", "delantero", "Nacional");
+            this.AltaJugador("Frank Rivery", "delantero", "Nacional");
+            this.AltaJugador("Gigliotti", "delantero", "Nacional");
+            this.AltaJugador("Puma Rodriguez", "mediocampista", "Nacional");
+            this.AltaJugador("Francisco Ginella", "mediocampista", "Nacional");
+            this.AltaJugador("Yonatan Rodriguez", "mediocampista", "Nacional");
+            this.AltaJugador("Martin Rodriguez", "mediocampista", "Nacional");
+            this.AltaJugador("Franco Fagundez", "defensa", "Nacional");
+            this.AltaJugador("Matias Laborda", "defensa", "Nacional");
+            this.AltaJugador("Leandro Lozano", "defensa", "Nacional");
+            this.AltaJugador("Sergio Rochet", "golero", "Nacional");
 
         }
     }
