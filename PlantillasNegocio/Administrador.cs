@@ -23,10 +23,12 @@ namespace plantillasDominio
         private List<Equipo> equipos = new List<Equipo>();
         private List<Formacion> formaciones = new List<Formacion>();
         private List<Jugador> jugadores = new List<Jugador>();
+        private List<Posicion> posiciones = new List<Posicion>();
         public Administrador()
         {
             PrecargaEquipos();
             PrecargaJugadores();
+            PrecargaPosiciones();
         }
         public List<Equipo> Equipos
         {
@@ -57,7 +59,14 @@ namespace plantillasDominio
                 miEquipo.Miembros.Add(miJugador);
             }
         }
-
+        private void AltaPosicion(string rol, string especifica, int x, int y)
+        {
+            if(rol != "" && especifica != "")
+            {
+                Posicion miPosicion = new Posicion(rol, especifica, x, y);
+                posiciones.Add(miPosicion);
+            }
+        }
         public Equipo BuscarEquipo (string nombre)
         {
             Equipo miEquipo = null;
@@ -95,7 +104,16 @@ namespace plantillasDominio
             this.AltaJugador("Matias Laborda", "defensa", "Nacional");
             this.AltaJugador("Leandro Lozano", "defensa", "Nacional");
             this.AltaJugador("Sergio Rochet", "golero", "Nacional");
+            this.AltaJugador("Renato Cesar", "mediocampista", "Nacional");
+            this.AltaJugador("Lionel Messi", "delantero", "Nacional");
+            this.AltaJugador("Juan Lopez", "at", "Nacional");
+            this.AltaJugador("Repetto", "dt", "Nacional");
+            this.AltaJugador("Luis Martinez", "medico", "Nacional");
 
+        }
+        private void PrecargaPosiciones()
+        {
+            this.AltaPosicion("golero", "POR", 140, 0);
         }
     }
 }
