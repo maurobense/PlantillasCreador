@@ -1,14 +1,19 @@
 using System.Collections.Generic;
 
 public class Posicion
+
 {
-	private string rol;
+    private string especifica; //Ya que hay posiciones como por ejemplo "DFC" que se representan en la cancha con el mismo nombre habiendo mas de 1, decidi darle una especial para las formaciones en las que esto sucede.
 
-	private string especifica;
+    private string nombre; //Nombre con el que se representara la posicion en el esquema.
 
-	private int x;
+	private string rol; //Rol de la posicion. Lo utilizaremos para la creacion del select y que sea mas dinamico seleccionar la posicion para un jugador(ej. mediocampista, defensa, suplente);
 
-	private int y;
+    private static bool disponible = true; //Indica si la posicion esta tomada por un jugador o el puesto se encuentra libre.
+
+    private int x; //La "x" va a indicar el margen a la izquierda (pudo ser derecha) que va a tener dentro del esquema de la cancha.
+
+	private int y; //La "y" va a indicar el margen con respecto a la parte inferior del esquema de la cancha.
 
 	public string Rol
     {
@@ -24,13 +29,18 @@ public class Posicion
     }
     public int Y
     {
-        get { return this.Y; }
+        get { return this.y; }
     }
-
-    public Posicion(string rol,string especifica,int x, int y)
+    public bool Disponible
     {
-        this.rol = rol;
+        get { return disponible; }
+        set { disponible = value; }
+    }
+    public Posicion(string especifica,string nombre,string rol,int x, int y)
+    {
         this.especifica = especifica;
+        this.nombre = nombre;
+        this.rol = rol;
         this.x = x;
         this.y = y;
     }

@@ -29,6 +29,8 @@ namespace plantillasDominio
             PrecargaEquipos();
             PrecargaJugadores();
             PrecargaPosiciones();
+            PrecargaFormaciones();
+            
         }
         public List<Equipo> Equipos
         {
@@ -59,13 +61,51 @@ namespace plantillasDominio
                 miEquipo.Miembros.Add(miJugador);
             }
         }
-        private void AltaPosicion(string rol, string especifica, int x, int y)
+        private void AltaPosicion(string especifica, string nombre,string rol, int x, int y)
         {
-            if(rol != "" && especifica != "")
+            if(rol != "" && especifica != "" && nombre != "")
             {
-                Posicion miPosicion = new Posicion(rol, especifica, x, y);
+                Posicion miPosicion = new Posicion(especifica, nombre,rol, x, y);
                 posiciones.Add(miPosicion);
             }
+        }
+
+        private void AltaFormacion(string nombre, string[] posiciones)
+        {
+            List<Posicion> misPosicones = ListaPosiciones(posiciones);
+            if(nombre != "" && misPosicones.Count == 11){
+                Formacion miFormacion = new Formacion(nombre, misPosicones);
+                formaciones.Add(miFormacion);
+            }
+        }
+        public List<Posicion> ListaPosiciones(string[] posiciones)
+        {
+            List<Posicion> misPosiciones = new List<Posicion>();
+            foreach(string posicion in posiciones)
+            {
+                Posicion miPosicion = BuscarPosicion(posicion);
+                if(miPosicion != null)
+                {
+                    misPosiciones.Add(miPosicion);
+                }
+            }
+
+            return misPosiciones;
+        }
+
+        public Posicion BuscarPosicion(string nombre)
+        {
+            Posicion miPosicion = null;
+            int i = 0;
+            while(miPosicion == null && i < posiciones.Count)
+            {
+                if(nombre == posiciones[i].Especifica)
+                {
+                    miPosicion = posiciones[i];
+                }
+                i++;
+            }
+            return miPosicion;
         }
         public Equipo BuscarEquipo (string nombre)
         {
@@ -113,7 +153,24 @@ namespace plantillasDominio
         }
         private void PrecargaPosiciones()
         {
-            this.AltaPosicion("golero", "POR", 140, 0);
+            this.AltaPosicion("POR", "POR","golero", 0, 140);
+            this.AltaPosicion("DFC1", "DFC", "defensa", 0, 250);
+            this.AltaPosicion("DFC2", "DFC", "defensa", 300, 270);
+            this.AltaPosicion("DFC3", "DFC", "defensa", -300, 270);
+            this.AltaPosicion("MC1", "MC", "mediocampista", -150, 450);
+            this.AltaPosicion("MC2", "MC", "mediocampista", 150, 450);
+            this.AltaPosicion("MD", "MC", "mediocampista", 460, 500);
+            this.AltaPosicion("MI", "MC", "mediocampista", -460, 500);
+            this.AltaPosicion("DC", "DC", "delantero", 0, 710);
+            this.AltaPosicion("ED", "ED", "delantero", 250, 680);
+            this.AltaPosicion("EI", "EI", "delantero", -250, 680);
+
+        }
+
+        private void PrecargaFormaciones()
+        {
+            string[] a_433 = { "POR","DFC1","DFC2","DFC3","MC1","MC2","MD","MI","DC","ED","EI" };
+            this.AltaFormacion("4-3-3", a_433);
         }
     }
 }
