@@ -6,6 +6,10 @@ public class Formacion
 
 	private List<Posicion> posiciones = new List<Posicion>();
 
+	public string Nombre
+    {
+        get { return this.nombre; }
+    }
 	public Formacion(string nombre, List<Posicion> posiciones)
     {
 		this.nombre = nombre;
