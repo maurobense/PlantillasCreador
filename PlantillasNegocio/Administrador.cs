@@ -24,6 +24,7 @@ namespace plantillasDominio
         private List<Formacion> formaciones = new List<Formacion>();
         private List<Jugador> jugadores = new List<Jugador>();
         private List<Posicion> posiciones = new List<Posicion>();
+        private List<Alineacion> alineaciones = new List<Alineacion>();
         public Administrador()
         {
             PrecargaEquipos();
@@ -117,6 +118,7 @@ namespace plantillasDominio
                 Equipo miEquipo = BuscarEquipo(equipo);
                 Alineacion miAlineacion = new Alineacion(misTitulares, misSuplentes, miCuerpoTecnico, formacion, rival, equipo);
                 miEquipo.Alineaciones.Add(miAlineacion);
+                alineaciones.Add(miAlineacion);
                 mensaje = "Alineacion creada con exito!";
                 ResetDisponibilidad();
                 return mensaje;
@@ -199,7 +201,20 @@ namespace plantillasDominio
             }
             return miJugador;
         }
-
+        public Alineacion AlineacionPorEquipoYRival(string equipo, string rival)
+        {
+            Alineacion miAlineacion = null;
+            int i = 0;
+            while(i < alineaciones.Count && miAlineacion == null)
+            {
+                if(alineaciones[i].Equipo == equipo && alineaciones[i].Rival == rival)
+                {
+                    miAlineacion = alineaciones[i];
+                }
+                i++;
+            }
+            return miAlineacion;
+        }
       
         public void AsignarPosicion(string jugador, string posicion, string equipo)
         {
@@ -355,7 +370,7 @@ namespace plantillasDominio
         {
             Formacion miFormacion = BuscarFormacion("4-3-3");
             
-            string[] titulares = { "Franco Fagundez", "Frank Ribery", "Gigliotti","Francisco Ginella", "Puma Rodriguez", "Yonatan Rodriguez","Matias Laborda", "Martin Rodriguez", "Chiellini", "Leando Lozano", "Sergio Rochet" };
+            string[] titulares = { "Franco Fagundez", "Frank Ribery", "Gigliotti","Francisco Ginella", "Puma Rodriguez", "Yonatan Rodriguez","Matias Laborda", "Martin Rodriguez", "Chiellini", "Leandro Lozano", "Sergio Rochet" };
             string[] suplentes = { "Lionel Messi", "Renato Cesar" };
             string[] cuerpoTecnico = { "Repetto" };
             this.AltaAlineacion(titulares,suplentes,cuerpoTecnico,miFormacion,"Rentistas", "Nacional");

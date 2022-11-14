@@ -9,13 +9,14 @@
 </select>
 <select id="select-equipos">
 </select>
-<a href="~/Plantillas/IndexAltaPlantilla">Hola</a>
 <div class="cancha">
     <div id="players-container">
     </div>
+    <form method="post" action="~/Plantilla/AltaAlineacion">
+
+    </form>
 </div>
 <script>
-
 
 
     let misFormaciones = document.getElementById('formaciones');
@@ -73,11 +74,12 @@
     }
     function posicionar() {
         let posiciones = document.getElementsByClassName("player");
-        for (let i = 0; i < posiciones.length;i++) {
-            let miPlayer = posicion(posiciones[i].innerText);
+        for (let i = 0; i < posiciones.length; i++) {
+            let especifica = posiciones[i].dataset.especifica;
+            let miPlayer = posicion(especifica);
+            
 
             let X = () => { if (miPlayer.X == 0) { return "auto" } else { return `${miPlayer.X}` } }
-            console.log(X());
 
             if (miPlayer.X < 0) {
                 posiciones[i].style.setProperty("margin", `auto ${X()*-1}px ${miPlayer.Y}px auto`);
@@ -106,8 +108,8 @@
 
         form_seleccionada.forEach((e,i) => {
             playersAppend = `
-                <div class="player" id="a${i+1}">
-                    <p class="position">${e.Especifica}</p>
+                <div data-especifica="${e.Especifica}" class="player" id="a${i+1}">
+                    <p class="position">${e.Nombre}</p>
                 </div>
                 `;
             playersContainer.innerHTML += playersAppend;
@@ -128,7 +130,6 @@
        
     }
 
- 
 
     cargarFormaciones();
     cargarEquipos();

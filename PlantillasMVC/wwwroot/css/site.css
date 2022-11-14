@@ -19,7 +19,7 @@ body {
     height: 1122px;
 }
 
-#players-container {
+#players-container,#players-containerV {
     width: 100%;
     height: 100%;
     display: inline-flex;
@@ -44,7 +44,10 @@ body {
     left: 0;
     bottom: 0;
 }
-
+.player-name{
+    position:absolute;
+    top:50px;
+}
 .position {
     position: relative;
     text-align: center;

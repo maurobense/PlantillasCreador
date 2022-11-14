@@ -15,7 +15,7 @@ public class Alineacion
 
 	private string equipo;
 
-	public List<Jugador> Titualres
+	public List<Jugador> Titulares
 	{
 		get { return this.titulares; }
 	}

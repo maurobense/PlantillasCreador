@@ -14,6 +14,7 @@ namespace PlantillasMVC.Controllers
     {
         private Administrador miAdmin = Administrador.Instancia;
 
+       
         public IActionResult IndexAltaPlantilla()
         {
             string strJson = "[";
@@ -57,5 +58,35 @@ namespace PlantillasMVC.Controllers
             return View();
             //return new ViewAsPdf("IndexAltaPlantilla");
         }
+        public IActionResult IndexVerAlineacion()
+        {
+            string strJsonf = "[";
+            int j = 0;
+            foreach (Equipo miEquipo in miAdmin.Equipos)
+            {
+                if (j == miAdmin.Equipos.Count - 1)
+                {
+                    strJsonf += JsonConvert.SerializeObject(miEquipo);
+
+                }
+                else
+                {
+                    strJsonf += JsonConvert.SerializeObject(miEquipo) + ",";
+                    j++;
+                }
+
+            }
+            strJsonf += "]";
+            ViewBag.Equipos = strJsonf;
+            return View();
+        }
+        public IActionResult VerAlineacion(string equipo, string rival)
+        {
+            Alineacion miAlineacion = miAdmin.AlineacionPorEquipoYRival(equipo, rival);
+            ViewBag.Alineacion = JsonConvert.SerializeObject(miAlineacion);
+
+            return View("IndexVerAlineacion");
+        }
+       
     }
 }

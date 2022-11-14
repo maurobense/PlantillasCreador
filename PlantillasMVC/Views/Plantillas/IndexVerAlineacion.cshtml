@@ -1,0 +1,130 @@
+﻿
+@{
+    ViewData["Title"] = "IndexVerAlineacion";
+}
+
+<p id="equipos-view">@ViewBag.Equipos</p>
+<form method="post" action="~/Plantillas/VerAlineacion">
+    <select name ="equipo"id="select-equiposV">
+    </select>
+    <select name="rival" id="select-equiposR">
+    </select>
+    <input type="submit" value="Cargar Alineacion">
+</form>
+<p id="alineacion">@ViewBag.Alineacion</p>
+<div class="cancha">
+    <div id="players-containerV">
+    </div>
+   
+</div>
+<script>
+    
+    let misEquipos = document.getElementById("equipos-view");
+    let misEquiposObj;
+    let miAlineacion = document.getElementById("alineacion");
+    let miAlineacionObj;
+    if (misEquipos.innerText != "") {
+        misEquiposObj = JSON.parse(misEquipos.innerText);
+        function cargarEquipos() {
+            let selectOptions = `<option class ="e-opt" value="null">Equipo</option>`;
+            misEquiposObj.forEach(e => {
+                selectOptions += `<option class="e-opt" value="${e.Nombre}">${e.Nombre}</option>`
+            })
+            selectE.innerHTML = selectOptions;
+            renderEquipo();
+        }
+        function cargarRival() {
+            let selectOptions = `<option class ="r-opt" value="null">Rival</option>`;
+            equipo_seleccionado.Alineaciones.forEach(e => {
+                selectOptions += `<option class="r-opt" value="${e.Rival}">${e.Rival}</option>`
+            })
+            selectR.innerHTML = selectOptions;
+            selectR.addEventListener("change", (e) => {
+                rival_seleccionado = e.target.value;
+
+            })
+        }
+        let selectE = document.getElementById("select-equiposV");
+        let selectR = document.getElementById("select-equiposR");
+        let rival_seleccionado;
+        let equipo_seleccionado;
+        misEquipos.style.display = "none";
+
+
+
+        function renderEquipo() {
+            selectE.addEventListener("change", (e) => {
+                equipoPorNombre(e.target.value);
+                cargarRival();
+
+            })
+        }
+        function equipoPorNombre(nombre) {
+            let i = 0;
+            let miEquipo = null;
+            while (i < misEquiposObj.length && miEquipo == null) {
+                if (nombre == misEquiposObj[i].Nombre) {
+                    miEquipo = misEquiposObj[i];
+                }
+                i++;
+            }
+            equipo_seleccionado = miEquipo;
+
+        }
+
+        cargarEquipos();
+    }
+    if (miAlineacion.innerText != "") {
+        miAlineacionObj = JSON.parse(miAlineacion.innerText);
+        miAlineacion.style.display = "none";
+        let playersCont = document.getElementById("players-containerV");
+
+        function renderAlineacion() {
+            let playersAppend = "";
+            miAlineacionObj.Titulares.forEach((e, i) => {
+                playersAppend = `
+                <div data-especifica="${e.Posicion.Especifica}" class="player" id="a${i + 1}">
+                    <p class="position">${e.Posicion.Nombre}</p>
+                    <p class = "player-name">${e.Nombre}</p>
+                </div>
+                `;
+                playersCont.innerHTML += playersAppend;
+            })
+        }
+        renderAlineacion();
+        posicionar();
+        function posicion(nombre) {
+            let miPos = null;
+            let i = 0;
+            while (miPos == null && i < miAlineacionObj.Formacion.Posiciones.length) {
+                if (miAlineacionObj.Formacion.Posiciones[i].Especifica == nombre) {
+                    miPos = miAlineacionObj.Formacion.Posiciones[i];
+                }
+                i++;
+            }
+            return miPos;
+        }
+        function posicionar() {
+            let posiciones = document.getElementsByClassName("player");
+            for (let i = 0; i < posiciones.length; i++) {
+                let especifica = posiciones[i].dataset.especifica;
+                let miPlayer = posicion(especifica);
+
+
+                let X = () => { if (miPlayer.X == 0) { return "auto" } else { return `${miPlayer.X}` } }
+
+                if (miPlayer.X < 0) {
+                    posiciones[i].style.setProperty("margin", `auto ${X() * -1}px ${miPlayer.Y}px auto`);
+                }
+                if (miPlayer.X == 0) {
+                    posiciones[i].style.setProperty("margin", `auto auto ${miPlayer.Y}px ${X()}`);
+                }
+                if (miPlayer.X > 0) {
+                    posiciones[i].style.setProperty("margin", `auto auto ${miPlayer.Y}px ${X()}px`);
+                }
+
+            }
+        }
+    }
+    
+</script>
