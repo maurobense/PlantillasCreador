@@ -1,0 +1,141 @@
+﻿
+@{
+    ViewData["Title"] = "IndexAltaPlantilla";
+}
+<p id="formaciones">@ViewBag.Formaciones</p>
+<p id="equipos">@ViewBag.Equipos</p>
+<select id="select-formaciones">
+  
+</select>
+<select id="select-equipos">
+</select>
+<a href="~/Plantillas/IndexAltaPlantilla">Hola</a>
+<div class="cancha">
+    <div id="players-container">
+    </div>
+</div>
+<script>
+
+
+
+    let misFormaciones = document.getElementById('formaciones');
+    let misEquipos = document.getElementById('equipos');
+    let misFormacionesObj = JSON.parse(misFormaciones.innerText);
+    let misEquiposObj = JSON.parse(misEquipos.innerText);
+    let select = document.getElementById("select-formaciones");
+    let selectE = document.getElementById("select-equipos");
+    let playersContainer = document.getElementById("players-container")
+    let form_seleccionada;
+    let equipo_seleccionado;
+
+
+    misFormaciones.style.display = "none";
+    misEquipos.style.display = "none";
+    
+    function cargarFormaciones() {
+        let selectOptions = `<option class ="f-opt" value="null">Formacion</option>`;
+        misFormacionesObj.forEach(e => {
+            selectOptions += `<option class="f-opt" value="${e.Nombre}">${e.Nombre}</option>`
+        })
+        select.innerHTML = selectOptions;
+    }
+    function cargarEquipos() {
+        let selectOptions = `<option class ="e-opt" value="null">Equipo</option>`;
+        misEquiposObj.forEach(e => {
+            selectOptions += `<option class="e-opt" value="${e.Nombre}">${e.Nombre}</option>`
+        })
+        selectE.innerHTML = selectOptions;
+    }
+
+    function renderFormacion() {
+        select.addEventListener("change", (e) => {
+            playersContainer.innerHTML = "";
+            posicionesPorNombre(e.target.value);
+            posicionar();
+            
+        })
+    }
+    function renderEquipo() {
+        selectE.addEventListener("change", (e) => {
+            equipoPorNombre(e.target.value);
+        })
+    }
+    function posicion(nombre) {
+        let miPos = null;
+        let i = 0;
+        while (miPos == null && i < form_seleccionada.length) {
+            if (form_seleccionada[i].Especifica == nombre) {
+                miPos = form_seleccionada[i];
+            }
+            i++;
+        }
+        return miPos;
+    }
+    function posicionar() {
+        let posiciones = document.getElementsByClassName("player");
+        for (let i = 0; i < posiciones.length;i++) {
+            let miPlayer = posicion(posiciones[i].innerText);
+
+            let X = () => { if (miPlayer.X == 0) { return "auto" } else { return `${miPlayer.X}` } }
+            console.log(X());
+
+            if (miPlayer.X < 0) {
+                posiciones[i].style.setProperty("margin", `auto ${X()*-1}px ${miPlayer.Y}px auto`);
+            }
+            if (miPlayer.X == 0) {
+                posiciones[i].style.setProperty("margin", `auto auto ${miPlayer.Y}px ${X()}`);
+            }
+            if (miPlayer.X > 0)
+            {
+                posiciones[i].style.setProperty("margin", `auto auto ${miPlayer.Y}px ${X()}px`);
+            }
+
+        }
+    }
+    function posicionesPorNombre(nombre) {
+        let i = 0;
+        let miForm = null;
+        while (i < misFormacionesObj.length && miForm == null) {
+            if (nombre == misFormacionesObj[i].Nombre) {
+                miForm = misFormacionesObj[i];
+            }
+            i++;
+        }
+        form_seleccionada = miForm.Posiciones;
+        let playersAppend = "";
+
+        form_seleccionada.forEach((e,i) => {
+            playersAppend = `
+                <div class="player" id="a${i+1}">
+                    <p class="position">${e.Especifica}</p>
+                </div>
+                `;
+            playersContainer.innerHTML += playersAppend;
+         
+        })
+       
+    }
+    function equipoPorNombre(nombre) {
+        let i = 0;
+        let miEquipo = null;
+        while (i < misEquiposObj.length && miEquipo == null) {
+            if (nombre == misEquiposObj[i].Nombre) {
+                miEquipo = misEquiposObj[i];
+            }
+            i++;
+        }
+        equipo_seleccionado = miEquipo;
+       
+    }
+
+ 
+
+    cargarFormaciones();
+    cargarEquipos();
+    renderEquipo();
+    renderFormacion();
+
+
+
+  
+</script>

@@ -38,9 +38,14 @@ namespace plantillasDominio
         {
             get { return this.equipos; }
         }
+    
         public List<Jugador> Jugadores
         {
             get { return this.jugadores; }
+        }
+        public List<Formacion> Formaciones
+        {
+            get { return this.formaciones; }
         }
         private void AltaEquipo(string nombre)
         {
@@ -58,7 +63,7 @@ namespace plantillasDominio
             Equipo miEquipo = BuscarEquipo(equipo);
             if (nombre != "" && rol != "" && miEquipo != null)
             {
-                Jugador miJugador = new Jugador(nombre, rol, miEquipo);
+                Jugador miJugador = new Jugador(nombre, rol, equipo);
                 jugadores.Add(miJugador);
                 miEquipo.Miembros.Add(miJugador);
             }
@@ -94,18 +99,23 @@ namespace plantillasDominio
 
             return misPosiciones;
         }
-        public string AltaAlineacion(Formacion formacion,string rival,string equipo)
+        public string AltaAlineacion(string[] titulares, string[] suplentes,string[]cuerpoTecnico, Formacion formacion,string rival,string equipo)
         {
             string mensaje = "Error !, no se ha dado de alta la alineacion";
-            Equipo miEquipo = BuscarEquipo(equipo);
-            List<Jugador> titulares = Titulares(miEquipo);
-            List<Jugador> suplentes = Suplentes(miEquipo);
-            List<Jugador> cuerpoTecnico = CuerpoTecnico(miEquipo);
+         
 
 
-            if (titulares.Count == 11 && suplentes.Count <= 7 && cuerpoTecnico.Count >= 1 && formacion != null && rival != "")
+            if (titulares.Length == 11 && suplentes.Length <= 7 && cuerpoTecnico.Length >= 1 && formacion != null && rival != "")
             {
-                Alineacion miAlineacion = new Alineacion(titulares, suplentes, cuerpoTecnico, formacion, rival, equipo);
+                List<Jugador> misTitulares = CargarTitulares(titulares,equipo);
+                List<Jugador> misSuplentes = CargarSuplentes(suplentes,equipo);
+                List<Jugador> miCuerpoTecnico = CargarCuerpoTecnico(cuerpoTecnico,equipo);
+
+
+
+
+                Equipo miEquipo = BuscarEquipo(equipo);
+                Alineacion miAlineacion = new Alineacion(misTitulares, misSuplentes, miCuerpoTecnico, formacion, rival, equipo);
                 miEquipo.Alineaciones.Add(miAlineacion);
                 mensaje = "Alineacion creada con exito!";
                 ResetDisponibilidad();
@@ -113,6 +123,36 @@ namespace plantillasDominio
             }
             ResetDisponibilidad();
             return mensaje;
+        }
+        public List<Jugador> CargarTitulares(string[]jugadores,string equipo)
+        {
+            List<Jugador> misJugadores = new List<Jugador>();
+            foreach(string jugador in jugadores)
+            {
+                Jugador miJugador = BuscarJugadorEquipo(jugador, equipo);
+                misJugadores.Add(miJugador);
+            }
+            return misJugadores;
+        }
+        public List<Jugador> CargarSuplentes(string[] jugadores, string equipo)
+        {
+            List<Jugador> misJugadores = new List<Jugador>();
+            foreach (string jugador in jugadores)
+            {
+                Jugador miJugador = BuscarJugadorEquipo(jugador, equipo);
+                misJugadores.Add(miJugador);
+            }
+            return misJugadores;
+        }
+        public List<Jugador> CargarCuerpoTecnico(string[] jugadores, string equipo)
+        {
+            List<Jugador> misJugadores = new List<Jugador>();
+            foreach (string jugador in jugadores)
+            {
+                Jugador miJugador = BuscarJugadorEquipo(jugador, equipo);
+                misJugadores.Add(miJugador);
+            }
+            return misJugadores;
         }
         public Posicion BuscarPosicion(string nombre)
         {
@@ -198,42 +238,42 @@ namespace plantillasDominio
             return miFormacion;
         }
        
-        public List<Jugador> Titulares(Equipo equipo)
-        {
-            List<Jugador> misTitulares = new List<Jugador>();
-            foreach(Jugador miJugador in equipo.Miembros)
-            {
-                if(!miJugador.Disponible && miJugador.Posicion != null)
-                {
-                    misTitulares.Add(miJugador);
-                }
-            }
-            return misTitulares;
-        }
-        public List<Jugador> Suplentes(Equipo equipo)
-        {
-            List<Jugador> misSuplentes = new List<Jugador>();
-            foreach (Jugador miJugador in equipo.Miembros)
-            {
-                if (!miJugador.Disponible && miJugador.Posicion == null)
-                {
-                    misSuplentes.Add(miJugador);
-                }
-            }
-            return misSuplentes;
-        }
-        public List<Jugador> CuerpoTecnico(Equipo equipo)
-        {
-            List<Jugador> miCuerpoTecnico = new List<Jugador>();
-            foreach (Jugador miJugador in equipo.Miembros)
-            {
-                if (miJugador.Rol == "ct")
-                {
-                    miCuerpoTecnico.Add(miJugador);
-                }
-            }
-            return miCuerpoTecnico;
-        }
+        //public List<Jugador> Titulares(Equipo equipo)
+        //{
+        //    List<Jugador> misTitulares = new List<Jugador>();
+        //    foreach(Jugador miJugador in equipo.Miembros)
+        //    {
+        //        if(!miJugador.Disponible && miJugador.Posicion != null)
+        //        {
+        //            misTitulares.Add(miJugador);
+        //        }
+        //    }
+        //    return misTitulares;
+        //}
+        //public List<Jugador> Suplentes(Equipo equipo)
+        //{
+        //    List<Jugador> misSuplentes = new List<Jugador>();
+        //    foreach (Jugador miJugador in equipo.Miembros)
+        //    {
+        //        if (!miJugador.Disponible && miJugador.Posicion == null)
+        //        {
+        //            misSuplentes.Add(miJugador);
+        //        }
+        //    }
+        //    return misSuplentes;
+        //}
+        //public List<Jugador> CuerpoTecnico(Equipo equipo)
+        //{
+        //    List<Jugador> miCuerpoTecnico = new List<Jugador>();
+        //    foreach (Jugador miJugador in equipo.Miembros)
+        //    {
+        //        if (miJugador.Rol == "ct")
+        //        {
+        //            miCuerpoTecnico.Add(miJugador);
+        //        }
+        //    }
+        //    return miCuerpoTecnico;
+        //}
 
         private void PrecargaEquipos()
         {
@@ -246,7 +286,7 @@ namespace plantillasDominio
         private void PrecargaJugadores()
         {
             this.AltaJugador("Franco Fagundez", "delantero", "Nacional");
-            this.AltaJugador("Frank Rivery", "delantero", "Nacional");
+            this.AltaJugador("Frank Ribery", "delantero", "Nacional");
             this.AltaJugador("Gigliotti", "delantero", "Nacional");
             this.AltaJugador("Puma Rodriguez", "mediocampista", "Nacional");
             this.AltaJugador("Francisco Ginella", "mediocampista", "Nacional");
@@ -265,17 +305,27 @@ namespace plantillasDominio
         }
         private void PrecargaPosiciones()
         {
-            this.AltaPosicion("POR", "POR","golero", 0, 140);
-            this.AltaPosicion("DFC1", "DFC", "defensa", 0, 250);
-            this.AltaPosicion("DFC2", "DFC", "defensa", 300, 270);
-            this.AltaPosicion("DFC3", "DFC", "defensa", -300, 270);
-            this.AltaPosicion("MC1", "MC", "mediocampista", -150, 450);
-            this.AltaPosicion("MC2", "MC", "mediocampista", 150, 450);
-            this.AltaPosicion("MD", "MC", "mediocampista", 460, 500);
-            this.AltaPosicion("MI", "MC", "mediocampista", -460, 500);
-            this.AltaPosicion("DC", "DC", "delantero", 0, 710);
-            this.AltaPosicion("ED", "ED", "delantero", 250, 680);
-            this.AltaPosicion("EI", "EI", "delantero", -250, 680);
+            this.AltaPosicion("POR", "POR","golero", 0, 60);
+            this.AltaPosicion("DFC1", "DFC", "defensa", 0, 280);
+            this.AltaPosicion("DFC2", "DFC", "defensa", 100, 295);
+            this.AltaPosicion("DFC3", "DFC", "defensa", -100, 295);
+            this.AltaPosicion("MC1", "MC", "mediocampista", 290, 460);
+            this.AltaPosicion("MC2", "MC", "mediocampista", -290, 460);
+            this.AltaPosicion("MD", "MI", "mediocampista", -100, 560);
+            this.AltaPosicion("MI", "MD", "mediocampista", 100,560);
+            this.AltaPosicion("DC", "DC", "delantero", 0, 900);
+            this.AltaPosicion("EI", "EI", "delantero", 180, 920);
+            this.AltaPosicion("ED", "ED", "delantero", -180, 920);
+            this.AltaPosicion("DFC4", "DFC", "defensa", 0, 260);
+            this.AltaPosicion("DFC5", "DFC", "defensa", 240, 260);
+            this.AltaPosicion("DFC6", "DFC", "defensa", -240, 260);
+            this.AltaPosicion("LD", "LD", "defensa", -80, 360);
+            this.AltaPosicion("LI", "LI", "defensa", 80, 360);
+            this.AltaPosicion("MC3", "MC", "mediocampista", 300, 480);
+            this.AltaPosicion("MC4", "MC", "mediocampista", -300, 480);
+            this.AltaPosicion("MD2", "MD", "mediocampista", -100, 600);
+            this.AltaPosicion("MI2", "MI", "mediocampista", 100, 600);
+            this.AltaPosicion("DC2", "DC", "delantero", 0, 850);
             this.AltaPosicion("DT", "CT", "dt",0,0);
 
         }
@@ -283,12 +333,14 @@ namespace plantillasDominio
         private void PrecargaFormaciones()
         {
             string[] a_433 = { "POR","DFC1","DFC2","DFC3","MC1","MC2","MD","MI","DC","ED","EI" };
+            string[] a_541 = { "POR", "DFC4", "DFC5", "DFC6", "LI", "LD", "MC3", "MC4", "MI2", "MD2", "DC2" };
             this.AltaFormacion("4-3-3", a_433);
+            this.AltaFormacion("4-2-1-3", a_541);
         }
         private void PrecargaAsignarPos()
         {
             this.AsignarPosicion("Franco Fagundez", "DC", "Nacional");
-            this.AsignarPosicion("Frank Rivery", "EI", "Nacional");
+            this.AsignarPosicion("Frank Ribery", "EI", "Nacional");
             this.AsignarPosicion("Gigliotti", "ED", "Nacional");
             this.AsignarPosicion("Puma Rodriguez", "MC1", "Nacional");
             this.AsignarPosicion("Francisco Ginella", "MC2", "Nacional");
@@ -302,7 +354,11 @@ namespace plantillasDominio
         private void PrecargaAlineacion()
         {
             Formacion miFormacion = BuscarFormacion("4-3-3");
-            this.AltaAlineacion(miFormacion,"Rentistas", "Nacional");
+            
+            string[] titulares = { "Franco Fagundez", "Frank Ribery", "Gigliotti","Francisco Ginella", "Puma Rodriguez", "Yonatan Rodriguez","Matias Laborda", "Martin Rodriguez", "Chiellini", "Leando Lozano", "Sergio Rochet" };
+            string[] suplentes = { "Lionel Messi", "Renato Cesar" };
+            string[] cuerpoTecnico = { "Repetto" };
+            this.AltaAlineacion(titulares,suplentes,cuerpoTecnico,miFormacion,"Rentistas", "Nacional");
         }
     }
 }

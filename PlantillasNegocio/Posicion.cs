@@ -36,6 +36,10 @@ public class Posicion
         get { return disponible; }
         set { disponible = value; }
     }
+    public string Nombre
+    {
+        get { return this.nombre; }
+    }
     public Posicion(string especifica,string nombre,string rol,int x, int y)
     {
         this.especifica = especifica;

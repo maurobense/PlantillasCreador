@@ -8,7 +8,7 @@ public class Jugador
 
 	private static bool disponible = true;
 
-	private Equipo equipo;
+	private string equipo;
 
 	public string Nombre
 	{
@@ -32,13 +32,13 @@ public class Jugador
         get { return disponible; }
         set { disponible = value; }
     }
-	public Equipo Equipo
+	public string Equipo
     {
         get { return this.equipo; }
         set { this.equipo = value; }
     }
 
-    public Jugador(string nombre, string rol,Equipo equipo)
+    public Jugador(string nombre, string rol,string equipo)
     {
         this.nombre = nombre;
         this.rol = rol;

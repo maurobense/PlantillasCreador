@@ -8,7 +8,12 @@ public class Formacion
 
 	public string Nombre
     {
-        get { return this.nombre; }
+        get { return this.nombre;}
+    }
+
+	public List<Posicion> Posiciones
+    {
+        get { return this.posiciones; }
     }
 	public Formacion(string nombre, List<Posicion> posiciones)
     {
